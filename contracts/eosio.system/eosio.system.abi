@@ -1,0 +1,101 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "transfer",
+      "base": "",
+      "fields": [
+        {"name":"from", "type":"account_name"},
+        {"name":"to", "type":"account_name"},
+        {"name":"quantity", "type":"asset"},
+        {"name":"memo", "type":"string"}
+      ]
+    },{
+     "name": "create",
+     "base": "",
+     "fields": [
+        {"name":"issuer", "type":"account_name"},
+        {"name":"maximum_supply", "type":"asset"},
+        {"name":"can_freeze", "type":"uint8"},
+        {"name":"can_recall", "type":"uint8"},
+        {"name":"can_whitelist", "type":"uint8"}
+     ]
+    },{
+     "name": "issue",
+     "base": "",
+     "fields": [
+        {"name":"to", "type":"account_name"},
+        {"name":"quantity", "type":"asset"},
+        {"name":"memo", "type":"string"}
+     ]
+    },{
+      "name": "account",
+      "base": "",
+      "fields": [
+        {"name":"currency", "type":"uint64"},
+        {"name":"balance", "type":"uint64"}
+      ]
+    },{
+      "name": "currency_stats",
+      "base": "",
+      "fields": [
+        {"name":"currency", "type":"uint64"},
+        {"name":"supply", "type":"uint64"}
+      ]
+    },{
+      "name": "nonce",
+      "base": "",
+      "fields": [
+        {"name":"value", "type":"string"}
+      ]
+    },{
+      "name": "regproducer",
+      "base": "",
+      "fields": [
+        {"name":"producer", "type":"account_name"},
+        {"name":"producer_key", "type":"bytes"}
+      ]
+    },{
+      "name": "stakevote",
+      "base": "",
+      "fields": [
+        {"name":"voter", "type":"account_name"},
+        {"name":"amount", "type":"int64"}
+      ]
+    }
+
+  ],
+  "actions": [{
+      "name": "transfer",
+      "type": "transfer"
+    },{
+      "name": "create",
+      "type": "create"
+    },{
+      "name": "issue",
+      "type": "issue"
+    },{
+      "name": "nonce",
+      "type": "nonce"
+    },{
+      "name": "regproducer",
+      "type": "regproducer"
+    },{
+      "name": "stakevote",
+      "type": "stakevote"
+    }
+  ],
+  "tables": [{
+      "name": "accounts",
+      "type": "account",
+      "index_type": "i64",
+      "key_names" : ["currency"],
+      "key_types" : ["uint64"]
+    },{
+      "name": "stat",
+      "type": "currency_stats",
+      "index_type": "i64",
+      "key_names" : ["currency"],
+      "key_types" : ["uint64"]
+    }
+  ]
+}
