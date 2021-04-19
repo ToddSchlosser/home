@@ -1,0 +1,16 @@
+add_subdirectory( fc )
+add_subdirectory( builtins )
+add_subdirectory( softfloat )
+add_subdirectory( chainbase )
+add_subdirectory( wasm-jit )
+add_subdirectory( appbase )
+add_subdirectory( chain )
+add_subdirectory( testing )
+
+#turn tools&tests off; not needed for library build
+set(BUILD_TESTS ON CACHE BOOL "Build GTest-based tests" FORCE)
+set(BUILD_TOOLS OFF CACHE BOOL "Build wabt tools")
+set(RUN_RE2C OFF CACHE BOOL "Run re2c")
+set(WITH_EXCEPTIONS ON CACHE BOOL "Build with exceptions enabled" FORCE)
+add_subdirectory( wabt EXCLUDE_FROM_ALL )
+add_test(NAME wabt-unittests COMMAND wabt/wabt-unittests)
