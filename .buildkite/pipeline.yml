@@ -1,0 +1,520 @@
+# env:
+#   ANKA_WORKDIR: "/data/job"
+#   ANKA_MOJAVE_TEMPLATE: "10.14.4_6C_14G_40G"
+#   ANKA_TEMPLATE_TAG: "clean::cicd::git-ssh::nas::brew"
+#   CHECKSUMABLE: "scripts/eosio_build*"
+#   MAC_TAG: "eosio_2-3"
+
+steps:
+
+  # - trigger: "mac-anka-fleet"
+  #   label: ":anka: Ensure Mojave Anka Template Tag Exists"
+  #   branches: "*"
+  #   async: false
+  #   build:
+  #     branch: "master"
+  #     env:
+  #       REPO: "${BUILDKITE_REPO}"
+  #       REPO_BRANCH: "${BUILDKITE_BRANCH}"
+  #       CHECKSUMABLE: "${CHECKSUMABLE}"
+  #       TEMPLATE: "${ANKA_MOJAVE_TEMPLATE}"
+  #       TEMPLATE_TAG: "${ANKA_TEMPLATE_TAG}"
+  #       TAG_COMMANDS: "CLONED_REPO_DIR/scripts/eosio_build.sh -y -P -f" # CLONED_REPO_DIR IS REQUIRED and is where the repo is always cloned into
+  #       PROJECT_TAG: "${MAC_TAG}"
+
+  # - wait
+
+  # - label: ":darwin: [Darwin] Mojave Build"
+  #   command:
+  #     - "./scripts/eosio_build.sh -y -P"
+  #     - "tar -pczf /Network/NAS/MAC_FLEET/BUILDKITE/artifacts/${ANKA_MOJAVE_TEMPLATE}-${BUILDKITE_PIPELINE_SLUG}-${BUILDKITE_BUILD_ID}.tar.gz build"
+  #   plugins:
+  #     chef/anka#v0.4.3:
+  #       vm-name: $ANKA_MOJAVE_TEMPLATE
+  #       vm-registry-tag: "${ANKA_TEMPLATE_TAG}::${MAC_TAG}"
+  #       workdir: $ANKA_WORKDIR
+  #       always-pull: true
+  #       debug: true
+  #       wait-network: true
+  #   agents:
+  #     - "queue=mac-anka-node-fleet"
+  #   timeout: 120
+
+
+  # j- command: | # macOS Mojave Build
+  # j    echo "--- Creating symbolic link to job directory :file_folder:"
+  # j    sleep 5
+  # j    ln -s "$(pwd)" /data/job
+  # j    cd /data/job
+  # j    echo "+++ Building :hammer:"
+  # j    ./scripts/eosio_build.sh -y -P
+  # j    echo "--- Compressing build directory :compression:"
+  # j    tar -pczf build.tar.gz build
+  # j    if [[ ! -f build.tar.gz ]]; then echo 'ERROR: No build.tar.gz artifact found!' && exit 1; fi
+  # j  label: ":darwin: Mojave Build"
+  # j  agents:
+  # j    - "role=builder-v2-2"
+  # j    - "os=mojave"
+  # j  artifact_paths: "build.tar.gz"
+  # j  timeout: 120
+
+  # j- command: | # Amazon Linux 2 Build
+  # j      echo "+++ :hammer: Building"
+  # j      ./scripts/eosio_build.sh -y -P
+  # j      echo "--- :compression: Compressing build directory"
+  # j      tar -pczf build.tar.gz build
+  # j      if [[ ! -f build.tar.gz ]]; then echo 'ERROR: No build.tar.gz artifact found!' && exit 1; fi
+  # j  label: ":aws: Amazon Linux 2 Build"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths: "build.tar.gz"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:amazonlinux2_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 120
+
+  # j- command: | # CentOS 7 Build
+  # j      echo "+++ :hammer: Building"
+  # j      ./scripts/eosio_build.sh -y -P
+  # j      echo "--- :compression: Compressing build directory"
+  # j      tar -pczf build.tar.gz build
+  # j      if [[ ! -f build.tar.gz ]]; then echo 'ERROR: No build.tar.gz artifact found!' && exit 1; fi
+  # j  label: ":centos: CentOS 7 Build"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths: "build.tar.gz"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:centos7_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 120
+
+  # j- command: | # Ubuntu 16.04 Build
+  # j      echo "+++ :hammer: Building"
+  # j      ./scripts/eosio_build.sh -y -P
+  # j      echo "--- :compression: Compressing build directory"
+  # j      tar -pczf build.tar.gz build
+  # j      if [[ ! -f build.tar.gz ]]; then echo 'ERROR: No build.tar.gz artifact found!' && exit 1; fi
+  # j  label: ":ubuntu: Ubuntu 16.04 Build"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths: "build.tar.gz"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu16_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 120
+
+  # - command: | # Ubuntu 18.04 Build
+  #       echo "+++ :hammer: Building"
+  #       ./scripts/eosio_build.sh -y -P
+  #       echo "--- :compression: Compressing build directory"
+  #       tar -pczf build.tar.gz build
+  #       if [[ ! -f build.tar.gz ]]; then echo 'ERROR: No build.tar.gz artifact found!' && exit 1; fi
+  #   label: ":ubuntu: Ubuntu 18.04 Build"
+  #   agents:
+  #     queue: "automation-eosiobuilds-builder-fleet"
+  #   artifact_paths: "build.tar.gz"
+  #   plugins:
+  #     docker#v2.1.0:
+  #       debug: true
+  #       image: "gcr.io/b1-automation-dev/eosio/builder:latest"
+  #       propagate-environment: true
+  #       workdir: /data/job
+  #   timeout: 120
+
+  - command: |
+      docker --version
+    label: "test devel"
+    agents:
+      queue: "automation-eos-builder-fleet"
+    timeout: 120
+
+  # j- wait
+
+  # j# Amazon Linux 2 Tests
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":aws: Amazon Linux 2 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/parallel-test.sh
+  # j  label: ":aws: Amazon Linux 2 Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:amazonlinux2_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":aws: Amazon Linux 2 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/serial-test.sh
+  # j  label: ":aws: Amazon Linux 2 NP Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:amazonlinux2_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j# centOS 7 Tests
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":centos: CentOS 7 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/parallel-test.sh
+  # j  label: ":centos: CentOS 7 Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:centos7_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":centos: CentOS 7 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/serial-test.sh
+  # j  label: ":centos: CentOS 7 NP Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:centos7_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j# Ubuntu 16.04 Tests
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 16.04 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/parallel-test.sh
+  # j  label: ":ubuntu: Ubuntu 16.04 Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu16_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 16.04 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/serial-test.sh
+  # j  label: ":ubuntu: Ubuntu 16.04 NP Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu16_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j# Ubuntu 18.04 Tests
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 18.04 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/parallel-test.sh
+  # j  label: ":ubuntu: Ubuntu 18.04 Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu18_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 18.04 Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ./scripts/serial-test.sh
+  # j  label: ":ubuntu: Ubuntu 18.04 NP Tests"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu18_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  timeout: 60
+
+  # j# - label: ":darwin: [Darwin] Mojave Tests"
+  # j#   command:
+  # j#     - "./scripts/parallel-test.sh /Network/NAS/MAC_FLEET/BUILDKITE/artifacts/${ANKA_MOJAVE_TEMPLATE}-${BUILDKITE_PIPELINE_SLUG}-${BUILDKITE_BUILD_ID}.tar.gz"
+  # j#   artifact_paths:
+  # j#     - "build/mongod.log"
+  # j#     - "build/genesis.json"
+  # j#     - "build/config.ini"
+  # j#   agents:
+  # j#     - "queue=mac-anka-node-fleet"
+  # j#   plugins:
+  # j#     chef/anka#v0.4.3:
+  # j#       vm-name: $ANKA_MOJAVE_TEMPLATE
+  # j#       vm-registry-tag: "${ANKA_TEMPLATE_TAG}::${MAC_TAG}"
+  # j#       workdir: $ANKA_WORKDIR
+  # j#       always-pull: true
+  # j#       debug: true
+  # j#       wait-network: true
+  # j#   timeout: 120
+
+  # j# - label: ":darwin: [Darwin] Mojave Tests"
+  # j#   command:
+  # j#     - "./scripts/serial-test.sh /Network/NAS/MAC_FLEET/BUILDKITE/artifacts/${ANKA_MOJAVE_TEMPLATE}-${BUILDKITE_PIPELINE_SLUG}-${BUILDKITE_BUILD_ID}.tar.gz"
+  # j#   artifact_paths:
+  # j#     - "build/mongod.log"
+  # j#     - "build/genesis.json"
+  # j#     - "build/config.ini"
+  # j#   agents:
+  # j#     - "queue=mac-anka-node-fleet"
+  # j#   plugins:
+  # j#     chef/anka#v0.4.3:
+  # j#       vm-name: $ANKA_MOJAVE_TEMPLATE
+  # j#       vm-registry-tag: "${ANKA_TEMPLATE_TAG}::${MAC_TAG}"
+  # j#       workdir: $ANKA_WORKDIR
+  # j#       always-pull: true
+  # j#       debug: true
+  # j#       wait-network: true
+  # j#   timeout: 120
+
+  # j# Mojave Tests
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":darwin: Mojave Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ln -s "$(pwd)" /data/job
+  # j      ./scripts/parallel-test.sh
+  # j  label: ":darwin: Mojave Tests"
+  # j  agents:
+  # j    - "role=tester-v2-2"
+  # j    - "os=mojave"
+  # j  timeout: 60
+  # j- command: |
+  # j      echo "--- :arrow_down: Downloading Build Directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":darwin: Mojave Build"
+  # j      echo "+++ :microscope: Running Tests"
+  # j      ln -s "$(pwd)" /data/job
+  # j      ./scripts/serial-test.sh
+  # j  label: ":darwin: Mojave NP Tests"
+  # j  agents:
+  # j    - "role=tester-v2-2"
+  # j    - "os=mojave"
+  # j  timeout: 60
+
+
+  # j- wait
+
+  # j- command: | # CentOS 7 Package Builder
+  # j      echo "--- :arrow_down: Downloading build directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":centos: CentOS 7 Build"
+  # j      tar -zxf build.tar.gz
+  # j      echo "+++ :microscope: Starting package build"
+  # j      yum install -y rpm-build
+  # j      mkdir -p /root/rpmbuild/BUILD
+  # j      mkdir -p /root/rpmbuild/BUILDROOT
+  # j      mkdir -p /root/rpmbuild/RPMS
+  # j      mkdir -p /root/rpmbuild/SOURCES
+  # j      mkdir -p /root/rpmbuild/SPECS
+  # j      mkdir -p /root/rpmbuild/SRPMS
+  # j      cd /data/job/build/packages
+  # j      bash generate_package.sh rpm
+  # j  label: ":centos: CentOS 7 Package Builder"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths:
+  # j    - "build/packages/*.rpm"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:centos7_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  env:
+  # j    OS: "el7"
+  # j    PKGTYPE: "rpm"
+  # j  timeout: 60
+
+  # j- command: | # Ubuntu 16.04 Package Builder
+  # j      echo "--- :arrow_down: Downloading build directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 16.04 Build"
+  # j      tar -zxf build.tar.gz
+  # j      echo "+++ :microscope: Starting package build"
+  # j      cd /data/job/build/packages
+  # j      bash generate_package.sh deb
+  # j  label: ":ubuntu: Ubuntu 16.04 Package Builder"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths:
+  # j    - "build/packages/*.deb"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu16_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  env:
+  # j    OS: "ubuntu-16.04"
+  # j    PKGTYPE: "deb"
+  # j  timeout: 60
+
+  # j- command: | # Ubuntu 18.04 Package Builder
+  # j      echo "--- :arrow_down: Downloading build directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":ubuntu: Ubuntu 18.04 Build"
+  # j      tar -zxf build.tar.gz
+  # j      echo "+++ :microscope: Starting package build"
+  # j      cd /data/job/build/packages
+  # j      bash generate_package.sh deb
+  # j  label: ":ubuntu: Ubuntu 18.04 Package Builder"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths:
+  # j    - "build/packages/*.deb"
+  # j  plugins:
+  # j    ecr#v1.1.4:
+  # j      login: true
+  # j      account_ids: "436617320021"
+  # j      no-include-email: true
+  # j      region: "us-west-2"
+  # j    docker#v2.1.0:
+  # j      debug: true
+  # j      image: "436617320021.dkr.ecr.us-west-2.amazonaws.com/ci:ubuntu18_2-3"
+  # j      propagate-environment: true
+  # j      workdir: /data/job
+  # j  env:
+  # j    OS: "ubuntu-18.04"
+  # j    PKGTYPE: "deb"
+  # j  timeout: 60
+
+  # j- command: | # macOS Mojave Package Builder
+  # j      echo "--- :arrow_down: Downloading build directory"
+  # j      buildkite-agent artifact download "build.tar.gz" . --step ":darwin: Mojave Build"
+  # j      tar -zxf build.tar.gz
+  # j      echo "+++ :microscope: Starting package build"
+  # j      ln -s "$(pwd)" /data/job
+  # j      cd /data/job/build/packages
+  # j      bash generate_package.sh brew
+  # j  label: ":darwin: Mojave Package Builder"
+  # j  agents:
+  # j    - "role=builder-v2-2"
+  # j    - "os=mojave"
+  # j  artifact_paths:
+  # j    - "build/packages/*.tar.gz"
+  # j    - "build/packages/*.rb"
+  # j  timeout: 60
+
+  # j- wait
+
+  # j- command: | # Brew Updater
+  # j      echo "--- :arrow_down: Downloading brew files"
+  # j      buildkite-agent artifact download "build/packages/eosio.rb" . --step ":darwin: Mojave Package Builder"
+  # j  label: ":darwin: Brew Updater"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  artifact_paths:
+  # j    - "build/packages/eosio.rb"
+  # j  timeout: 5
+
+  # j- command: | # Git Submodule Regression Check
+  # j      echo "+++ :microscope: Running git submodule regression check" && \
+  # j      ./scripts/submodule_check.sh
+  # j  label: "Git Submodule Regression Check"
+  # j  agents:
+  # j    queue: "automation-large-builder-fleet"
+  # j  timeout: 5
