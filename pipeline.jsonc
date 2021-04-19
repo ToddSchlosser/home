@@ -1,0 +1,45 @@
+{
+    "eosio-code-coverage":
+    {
+        "exclude": [ // ignore coverage reports from source filenames matching these PCREs
+            "^/build/",
+            "^/coverage/",
+            "^/.git/",
+            "^/libraries/eos-vm/",
+            "^/libraries/wasm-jit/",
+            "^/node_modules/",
+            "^/unittests/"
+        ],
+        "expect": [ // expect coverage reports from source filenames matching these PCREs
+            "[.]c(pp)?([.]in)?$",
+            "[.]h(pp)?([.]in)?$"
+        ]
+    },
+    "eosio-docker-builds":
+    {
+        "environment":
+        {
+            "BUILDER_TAG": "v2.0.0"
+        }
+    },
+    "eos-multiversion-tests":
+    {
+        "environment":
+        {
+            "IMAGE_TAG": "_1-8-0-rc2"
+        },
+        "configuration":
+        [
+            "170=v1.7.0"
+        ]
+    },
+    "eosio-resume-from-state":
+    {
+        "test":
+        [
+            {
+                "commit": "51d1698c5e6393fa1e342f475c43cf2836c4a12c"
+            }
+        ]
+    }
+}
