@@ -1,0 +1,13 @@
+add_subdirectory(currency)
+add_subdirectory(exchange)
+add_subdirectory(infinite)
+add_subdirectory(proxy)
+add_subdirectory(test_api)
+add_subdirectory(simpledb)
+add_subdirectory(storage)
+#add_subdirectory(social)
+add_subdirectory(malicious)
+add_subdirectory(dummy)
+
+install( DIRECTORY eoslib DESTINATION include/ )
+install( DIRECTORY skeleton DESTINATION share/ )
