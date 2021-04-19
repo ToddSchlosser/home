@@ -1,0 +1,6 @@
+add_subdirectory( eosiod )
+add_subdirectory( eosioc )
+add_subdirectory( eosiowd )
+add_subdirectory( eosio-launcher )
+add_subdirectory( eosio-applesedemo )
+add_subdirectory( eosio-abigen )
