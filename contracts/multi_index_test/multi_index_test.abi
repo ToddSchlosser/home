@@ -1,0 +1,17 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "trigger",
+      "base": "",
+      "fields": [
+        {"name": "what", "type": "uint32" }
+      ]
+   }
+  ],
+  "actions": [{
+      "name": "trigger",
+      "type": "trigger"
+    }
+  ],
+  "tables": []
+}
